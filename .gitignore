@@ -1,0 +1,26 @@
+# Build output
+bin/
+obj/
+publish_output/
+
+# Logs de depuración generados por el launcher
+*.log
+error_launcher.txt
+forge_install.log
+build_errors.txt
+build_output*.log
+out.log
+erro-output.txt
+
+# User-specific files
+*.user
+*.suo
+.vs/
+
+# NuGet
+*.nupkg
+packages/
+
+# OS
+Thumbs.db
+.DS_Store

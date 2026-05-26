@@ -1,0 +1,298 @@
+<UserControl x:Class="JurassicCraftLauncher.SkinsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:JurassicCraftLauncher"
+             mc:Ignorable="d" 
+             d:DesignHeight="550" d:DesignWidth="850"
+             Foreground="#D8C8A0">
+
+    <UserControl.Resources>
+        <!-- Estilo para el TextBox de búsqueda -->
+        <Style x:Key="SearchBoxStyle" TargetType="TextBox">
+            <Setter Property="Background" Value="#12FFFFFF"/>
+            <Setter Property="Foreground" Value="#D8C8A0"/>
+            <Setter Property="CaretBrush" Value="#E8B820"/>
+            <Setter Property="BorderBrush" Value="#25E8B820"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="10,0"/>
+            <Setter Property="FontFamily" Value="Consolas"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="8">
+                            <ScrollViewer x:Name="PART_ContentHost" Margin="{TemplateBinding Padding}" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter Property="BorderBrush" Value="#55E8B820"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Estilo para el botón de búsqueda -->
+        <Style x:Key="SearchBtnStyle" TargetType="Button">
+            <Setter Property="Background" Value="#25E8B820"/>
+            <Setter Property="Foreground" Value="#E8B820"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="FontFamily" Value="Consolas"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="8" Padding="14,8">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#40E8B820"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#55E8B820"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Estilo para cada carta de skin en la galería -->
+        <Style x:Key="SkinCardStyle" TargetType="Border">
+            <Setter Property="Background" Value="#10FFFFFF"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+    </UserControl.Resources>
+
+    <UserControl.Triggers>
+        <EventTrigger RoutedEvent="UserControl.Loaded">
+            <BeginStoryboard>
+                <Storyboard RepeatBehavior="Forever">
+                    <DoubleAnimation Storyboard.TargetName="CharacterRotation" 
+                                     Storyboard.TargetProperty="Angle" 
+                                     From="35" To="395" Duration="0:0:15"/>
+                </Storyboard>
+            </BeginStoryboard>
+        </EventTrigger>
+    </UserControl.Triggers>
+
+    <Grid Margin="50,65,50,40">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- TÍTULO PRINCIPAL -->
+        <TextBlock Grid.Row="0"
+                   Text="{x:Static local:AppTexts.SkinsPageTitle}"
+                   FontFamily="Impact" 
+                   FontSize="26" 
+                   Foreground="#E8B820" 
+                   Margin="0,0,0,25">
+            <TextBlock.Effect>
+                <DropShadowEffect Color="#E8B820" BlurRadius="22" ShadowDepth="0" Opacity="0.65"/>
+            </TextBlock.Effect>
+        </TextBlock>
+
+        <!-- CUERPO DE LA PESTAÑA -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="6.5*"/>
+                <ColumnDefinition Width="3.5*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- COLUMNA IZQUIERDA: BUSCADOR DE SKINS -->
+            <Grid Grid.Column="0" Margin="0,0,30,8">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- BARRA DE BÚSQUEDA -->
+                <Grid Grid.Row="0" Margin="0,0,0,10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Contenedor del TextBox + placeholder superpuesto -->
+                    <Grid Grid.Column="0" Margin="0,0,8,0">
+                        <TextBox x:Name="TxtSearch"
+                                 Style="{StaticResource SearchBoxStyle}"
+                                 MaxLength="16"
+                                 Height="42"
+                                 VerticalContentAlignment="Center"
+                                 KeyDown="TxtSearch_KeyDown"
+                                 TextChanged="TxtSearch_TextChanged"/>
+
+                        <!-- Placeholder: visible solo cuando el TextBox está vacío -->
+                        <TextBlock x:Name="TxtSearchPlaceholder"
+                                   Text="{x:Static local:AppTexts.SkinsSearchPlaceholder}"
+                                   Foreground="#50D8C8A0"
+                                   FontFamily="Consolas"
+                                   FontSize="13"
+                                   Margin="24,0,0,0"
+                                   VerticalAlignment="Center"
+                                   IsHitTestVisible="False"/>
+                    </Grid>
+
+                    <Button Grid.Column="1"
+                            x:Name="BtnSearch"
+                            Style="{StaticResource SearchBtnStyle}"
+                            Content="{x:Static local:AppTexts.SkinsSearchBtn}"
+                            Click="BtnSearch_Click"/>
+                </Grid>
+
+                <!-- GALERÍA DE SKINS -->
+                <Border Grid.Row="1" Background="#08FFFFFF" CornerRadius="12" BorderBrush="#15FFFFFF" BorderThickness="1">
+                    <Grid>
+                        <!-- Estado de carga -->
+                        <StackPanel x:Name="LoadingPanel" 
+                                    VerticalAlignment="Center" 
+                                    HorizontalAlignment="Center"
+                                    Visibility="Collapsed">
+                            <TextBlock Text="⏳" FontSize="32" HorizontalAlignment="Center" Margin="0,0,0,8"/>
+                            <TextBlock x:Name="TxtLoadingMsg" 
+                                       Text="{x:Static local:AppTexts.SkinsLoadingDefault}" 
+                                       HorizontalAlignment="Center" 
+                                       FontFamily="Consolas" 
+                                       FontSize="12" 
+                                       Foreground="#80D8C8A0"/>
+                        </StackPanel>
+
+                        <!-- Estado vacío / inicial -->
+                        <StackPanel x:Name="EmptyPanel" 
+                                    VerticalAlignment="Center" 
+                                    HorizontalAlignment="Center"
+                                    Visibility="Visible">
+                            <TextBlock Text="🎮" FontSize="40" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                            <TextBlock Text="{x:Static local:AppTexts.SkinsEmptyLine1}" 
+                                       HorizontalAlignment="Center" 
+                                       FontFamily="Consolas" 
+                                       FontSize="12" 
+                                       Foreground="#50D8C8A0"/>
+                            <TextBlock Text="{x:Static local:AppTexts.SkinsEmptyLine2}" 
+                                       HorizontalAlignment="Center" 
+                                       FontFamily="Consolas" 
+                                       FontSize="12" 
+                                       Foreground="#50D8C8A0"/>
+                        </StackPanel>
+
+                        <!-- Estado de error -->
+                        <StackPanel x:Name="ErrorPanel" 
+                                    VerticalAlignment="Center" 
+                                    HorizontalAlignment="Center"
+                                    Visibility="Collapsed">
+                            <TextBlock Text="⚠️" FontSize="32" HorizontalAlignment="Center" Margin="0,0,0,8"/>
+                            <TextBlock x:Name="TxtErrorMsg"
+                                       Text="{x:Static local:AppTexts.SkinsErrorDefault}" 
+                                       HorizontalAlignment="Center" 
+                                       FontFamily="Consolas" 
+                                       FontSize="12" 
+                                       Foreground="#80D8C8A0"
+                                       TextWrapping="Wrap"
+                                       MaxWidth="200"
+                                       TextAlignment="Center"/>
+                        </StackPanel>
+
+                        <!-- Galería de resultados -->
+                        <ScrollViewer x:Name="GalleryScroll"
+                                      VerticalScrollBarVisibility="Auto" 
+                                      Margin="4,6,4,6"
+                                      Padding="8,10,4,10"
+                                      Visibility="Collapsed">
+                            <WrapPanel x:Name="SkinsGallery" ItemWidth="112" ItemHeight="170"/>
+                        </ScrollViewer>
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <!-- COLUMNA DERECHA: PREVIEW 3D E IMPORTACIÓN -->
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Model Placeholder (3D Skin) -->
+                <Border x:Name="SkinPreview3D" 
+                        Grid.Row="0" 
+                        Background="#10D8C8A0" 
+                        CornerRadius="15" 
+                        BorderBrush="#15E8B820" 
+                        BorderThickness="1"
+                        Margin="0,0,0,12">
+                    <Grid>
+                        <!-- Visualizador 3D (Cargado tras importar o seleccionar) -->
+                        <Viewport3D x:Name="SkinViewport" Margin="10" Opacity="0" 
+                                    RenderOptions.BitmapScalingMode="NearestNeighbor">
+                            <Viewport3D.Camera>
+                                <PerspectiveCamera Position="0, 16, 45" LookDirection="0, 0, -1" FieldOfView="45" UpDirection="0,1,0"/>
+                            </Viewport3D.Camera>
+                            
+                            <!-- Luces -->
+                            <ModelVisual3D>
+                                <ModelVisual3D.Content>
+                                    <Model3DGroup>
+                                        <AmbientLight Color="#909090"/>
+                                        <DirectionalLight Color="#FFFFFF" Direction="-1, -2, -3"/>
+                                        <DirectionalLight Color="#606060" Direction="1, 2, 1"/>
+                                    </Model3DGroup>
+                                </ModelVisual3D.Content>
+                            </ModelVisual3D>
+
+                            <!-- Contenedor del Modelo con Rotación -->
+                            <ModelVisual3D x:Name="CharacterModelContainer">
+                                <ModelVisual3D.Transform>
+                                    <RotateTransform3D CenterX="0" CenterY="12" CenterZ="0">
+                                        <RotateTransform3D.Rotation>
+                                            <AxisAngleRotation3D x:Name="CharacterRotation" Axis="0,1,0" Angle="35"/>
+                                        </RotateTransform3D.Rotation>
+                                    </RotateTransform3D>
+                                </ModelVisual3D.Transform>
+                            </ModelVisual3D>
+                        </Viewport3D>
+
+                        <!-- Fallback/Legacy Image -->
+                        <Image x:Name="SkinPreviewImage" Visibility="Collapsed"/>
+
+                        <!-- Representación minimalista inicial -->
+                        <TextBlock x:Name="PlaceholderIcon"
+                                   Text="&#x263B;" 
+                                   FontSize="120" 
+                                   Foreground="#08E8B820" 
+                                   HorizontalAlignment="Center" 
+                                   VerticalAlignment="Center"/>
+                        
+                        <!-- Overlay de estado inicial -->
+                        <Border x:Name="PlaceholderOverlay" 
+                                Background="#25000000" 
+                                CornerRadius="14"/>
+                    </Grid>
+                </Border>
+
+                <!-- Botón de Importar PNG -->
+                <Button Grid.Row="1"
+                        Style="{StaticResource PlayBtn}"
+                        Content="{x:Static local:AppTexts.SkinsImportBtn}"
+                        Height="48"
+                        Margin="0,0,0,8"
+                        Click="BtnImport_Click">
+                    <Button.Effect>
+                        <DropShadowEffect Color="#E8B820" BlurRadius="12" ShadowDepth="0" Opacity="0.4"/>
+                    </Button.Effect>
+                </Button>
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>

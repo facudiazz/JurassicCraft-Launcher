@@ -1,0 +1,272 @@
+<UserControl x:Class="JurassicCraftLauncher.SettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:JurassicCraftLauncher"
+             mc:Ignorable="d" 
+             d:DesignHeight="800" d:DesignWidth="900"
+             Foreground="#D8C8A0">
+
+    <UserControl.Resources>
+
+        <!-- TAB-RADIO FLAT para Gráficos -->
+        <Style x:Key="FlatRadio" TargetType="RadioButton">
+            <Setter Property="Background" Value="#0AFFFFFF"/>
+            <Setter Property="Foreground" Value="#70D8C8A0"/>
+            <Setter Property="FontFamily" Value="Consolas"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="Padding" Value="20,10"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="4" Margin="0,0,12,0" BorderBrush="#15FFFFFF" BorderThickness="1">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="{TemplateBinding Padding}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#15E8B820"/>
+                                <Setter Property="Foreground" Value="#E8B820"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#25E8B820"/>
+                                <Setter TargetName="border" Property="BorderBrush" Value="#E8B820"/>
+                                <Setter Property="Foreground" Value="#E8B820"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- SWITCH Toggle Minimalista -->
+        <Style x:Key="FlatSwitch" TargetType="CheckBox">
+            <Setter Property="Foreground" Value="#70D8C8A0"/>
+            <Setter Property="FontFamily" Value="Consolas"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="CheckBox">
+                        <StackPanel Orientation="Horizontal" Background="Transparent">
+                            <Border x:Name="track" Width="38" Height="20" CornerRadius="10" Background="#20FFFFFF" VerticalAlignment="Center" BorderBrush="#30FFFFFF" BorderThickness="1">
+                                <Ellipse x:Name="thumb" Width="14" Height="14" Fill="#80D8C8A0" HorizontalAlignment="Left" Margin="2,0,0,0"/>
+                            </Border>
+                            <ContentPresenter Margin="12,0,0,0" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="track" Property="Background" Value="#C8890A"/>
+                                <Setter TargetName="track" Property="BorderBrush" Value="#E8B820"/>
+                                <Setter TargetName="thumb" Property="Fill" Value="#F5E8C0"/>
+                                <Setter TargetName="thumb" Property="HorizontalAlignment" Value="Right"/>
+                                <Setter TargetName="thumb" Property="Margin" Value="0,0,2,0"/>
+                                <Setter Property="Foreground" Value="#E8B820"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="track" Property="BorderBrush" Value="#60E8B820"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- BOTONES WIPE Flat Industrial -->
+        <Style x:Key="WipeBtnFlat" TargetType="Button">
+            <Setter Property="Background" Value="#10000000"/>
+            <Setter Property="Foreground" Value="#90D8C8A0"/>
+            <Setter Property="FontFamily" Value="Consolas"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="Padding" Value="18,10"/>
+            <Setter Property="Margin" Value="0,0,12,12"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="4" BorderBrush="#25FFFFFF" BorderThickness="1">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#15E8B820"/>
+                                <Setter TargetName="border" Property="BorderBrush" Value="#70E8B820"/>
+                                <Setter Property="Foreground" Value="#E8B820"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Variación: Wipe Total (hover con toque rojizo) -->
+        <Style x:Key="WipeTotalFlat" TargetType="Button" BasedOn="{StaticResource WipeBtnFlat}">
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Foreground" Value="#FF7777"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Separador de 1px con gradiente horizontal -->
+        <Style x:Key="FlatSep" TargetType="Border">
+            <Setter Property="Height" Value="1"/>
+            <Setter Property="Margin" Value="0,18,0,26"/>
+            <Setter Property="Background">
+                <Setter.Value>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                        <GradientStop Color="#00FFFFFF" Offset="0"/>
+                        <GradientStop Color="#18FFFFFF" Offset="0.5"/>
+                        <GradientStop Color="#00FFFFFF" Offset="1"/>
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+    </UserControl.Resources>
+
+    <!-- Todos los textos se toman desde AppTexts.cs vía x:Static para edición centralizada -->
+    <Grid Margin="50,65,80,40">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- TÍTULO FIJO (AppTexts.SettingsPageTitle) -->
+        <TextBlock Grid.Row="0"
+                   Text="{x:Static local:AppTexts.SettingsPageTitle}"
+                   FontFamily="Impact" 
+                   FontSize="26" 
+                   Foreground="#E8B820" 
+                   Margin="0,0,0,18">
+            <TextBlock.Effect>
+                <DropShadowEffect Color="#E8B820" BlurRadius="22" ShadowDepth="0" Opacity="0.65"/>
+            </TextBlock.Effect>
+        </TextBlock>
+
+        <!-- ZONA SCROLL ENCUADRADA -->
+        <Border Grid.Row="1" ClipToBounds="True">
+            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="0,0,12,30">
+                <StackPanel>
+
+                    <!-- ─── CALIDAD GRÁFICA ─── -->
+                    <StackPanel>
+                        <TextBlock Text="{x:Static local:AppTexts.SettingsSectionGraphicsTitle}"
+                                   FontFamily="Consolas" FontSize="13" FontWeight="Bold" Foreground="#D8C8A0" Margin="0,0,0,6"/>
+                        <TextBlock Text="{x:Static local:AppTexts.SettingsSectionGraphicsDesc}"
+                                   FontFamily="Consolas" FontSize="11" Foreground="#55D8C8A0" TextWrapping="Wrap" Margin="0,0,0,16"/>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                            <RadioButton x:Name="BtnGraphicLow"
+                                         Content="{x:Static local:AppTexts.GraphicsLow}"
+                                         Style="{StaticResource FlatRadio}" Tag="Low" Checked="GraphicPreset_Checked"/>
+                            <RadioButton x:Name="BtnGraphicMedium"
+                                         Content="{x:Static local:AppTexts.GraphicsMedium}"
+                                         Style="{StaticResource FlatRadio}" Tag="Medium" Checked="GraphicPreset_Checked" IsChecked="True"/>
+                            <RadioButton x:Name="BtnGraphicHigh"
+                                         Content="{x:Static local:AppTexts.GraphicsHigh}"
+                                         Style="{StaticResource FlatRadio}" Tag="High" Checked="GraphicPreset_Checked"/>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <Border Style="{StaticResource FlatSep}"/>
+
+                    <!-- ─── MEMORIA RAM ─── -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="{x:Static local:AppTexts.SettingsSectionRamTitle}"
+                                       FontFamily="Consolas" FontSize="13" FontWeight="Bold" Foreground="#D8C8A0" Margin="0,0,0,6"/>
+                            <TextBlock Text="{x:Static local:AppTexts.SettingsSectionRamDesc}"
+                                       FontFamily="Consolas" FontSize="11" Foreground="#55D8C8A0" TextWrapping="Wrap" Margin="0,0,20,18"/>
+                            <Slider x:Name="RamSlider" Minimum="2.0" Maximum="16.0" Value="4.0"
+                                    TickFrequency="0.5" IsSnapToTickEnabled="True"
+                                    ValueChanged="RamSlider_ValueChanged" Margin="0,4,20,0"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center" MinWidth="110">
+                            <TextBlock x:Name="RamValueText" Text="4.0 GB"
+                                       FontFamily="Impact" FontSize="36" Foreground="#E8B820" HorizontalAlignment="Right">
+                                <TextBlock.Effect>
+                                    <DropShadowEffect Color="#E8B820" BlurRadius="12" ShadowDepth="0" Opacity="0.4"/>
+                                </TextBlock.Effect>
+                            </TextBlock>
+                            <TextBlock x:Name="RamMbText" Text="4096 MB"
+                                       FontFamily="Consolas" FontSize="12" Foreground="#60E8B820" HorizontalAlignment="Right"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <Border Style="{StaticResource FlatSep}"/>
+
+                    <!-- ─── ARGUMENTOS JVM ─── -->
+                    <StackPanel>
+                        <Grid Margin="0,0,0,14">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="{x:Static local:AppTexts.SettingsSectionJvmTitle}"
+                                           FontFamily="Consolas" FontSize="13" FontWeight="Bold" Foreground="#D8C8A0" Margin="0,0,0,6"/>
+                                <TextBlock Text="{x:Static local:AppTexts.SettingsSectionJvmDesc}"
+                                           FontFamily="Consolas" FontSize="11" Foreground="#55D8C8A0" TextWrapping="Wrap" Margin="0,0,20,0"/>
+                            </StackPanel>
+                            <CheckBox x:Name="ToggleJvmArgs" Grid.Column="1" VerticalAlignment="Center"
+                                      Style="{StaticResource FlatSwitch}"
+                                      Content="{x:Static local:AppTexts.SettingsJvmToggleLabel}"
+                                      Checked="ToggleJvmArgs_Changed" Unchecked="ToggleJvmArgs_Changed"/>
+                        </Grid>
+
+                        <!-- Contenedor visible solo si el toggle está activo -->
+                        <Border x:Name="JvmArgsContainer" Visibility="Collapsed">
+                            <Border BorderBrush="#40E8B820" BorderThickness="1" CornerRadius="5" Background="#10E8B820">
+                                <TextBox x:Name="InputJvmArgs"
+                                         Background="Transparent"
+                                         Foreground="#D8C8A0"
+                                         CaretBrush="#E8B820"
+                                         SelectionBrush="#40E8B820"
+                                         FontFamily="Consolas"
+                                         FontSize="12"
+                                         TextWrapping="Wrap"
+                                         MinHeight="70"
+                                         BorderThickness="0"
+                                         Padding="12,10"
+                                         TextChanged="InputJvmArgs_TextChanged"/>
+                            </Border>
+                        </Border>
+                    </StackPanel>
+
+                    <Border Style="{StaticResource FlatSep}"/>
+
+                    <!-- ─── ZONA DE HIGIENE / WIPE ─── -->
+                    <StackPanel>
+                        <TextBlock Text="{x:Static local:AppTexts.SettingsSectionWipeTitle}"
+                                   FontFamily="Consolas" FontSize="13" FontWeight="Bold" Foreground="#D8C8A0" Margin="0,0,0,6"/>
+                        <TextBlock Text="{x:Static local:AppTexts.SettingsSectionWipeDesc}"
+                                   FontFamily="Consolas" FontSize="11" Foreground="#55D8C8A0" TextWrapping="Wrap" Margin="0,0,0,18"/>
+
+                        <WrapPanel Orientation="Horizontal">
+                            <Button Content="{x:Static local:AppTexts.WipeBtnConfig}"
+                                    Style="{StaticResource WipeBtnFlat}" Tag="Config" Click="ActionWipe_Click"/>
+                            <Button Content="{x:Static local:AppTexts.WipeBtnShaders}"
+                                    Style="{StaticResource WipeBtnFlat}" Tag="Shaders" Click="ActionWipe_Click"/>
+                            <Button Content="{x:Static local:AppTexts.WipeBtnResources}"
+                                    Style="{StaticResource WipeBtnFlat}" Tag="Resources" Click="ActionWipe_Click"/>
+                            <Button Content="{x:Static local:AppTexts.WipeBtnEngine}"
+                                    Style="{StaticResource WipeBtnFlat}" Tag="Engine" Click="ActionWipe_Click"/>
+                            <Button Content="{x:Static local:AppTexts.WipeBtnCache}"
+                                    Style="{StaticResource WipeBtnFlat}" Tag="Cache" Click="ActionWipe_Click"/>
+                            <Button Content="{x:Static local:AppTexts.WipeBtnTotal}"
+                                    Style="{StaticResource WipeTotalFlat}" Tag="Total" Click="ActionWipe_Click"/>
+                        </WrapPanel>
+                    </StackPanel>
+
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+    </Grid>
+</UserControl>

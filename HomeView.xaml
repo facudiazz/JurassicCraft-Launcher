@@ -1,0 +1,87 @@
+<UserControl x:Class="JurassicCraftLauncher.HomeView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:JurassicCraftLauncher"
+             mc:Ignorable="d" 
+             d:DesignHeight="620" d:DesignWidth="906">
+    <Grid>
+        <!-- ── Centro del Launcher: Logo ── -->
+        <Grid VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,-60,0,0">
+            <Image Source="pack://application:,,,/logo.png" 
+                   Width="280" 
+                   Height="180" 
+                   Stretch="Uniform" 
+                   Opacity="0.85">
+                <Image.Effect>
+                    <DropShadowEffect Color="#E8B820" BlurRadius="25" ShadowDepth="0" Opacity="0.25"/>
+                </Image.Effect>
+            </Image>
+        </Grid>
+
+        <!-- ── Control Deck Inferior: Acción Principal ── -->
+        <Grid VerticalAlignment="Bottom" Margin="0,0,0,60">
+            <StackPanel HorizontalAlignment="Center">
+                
+                <!-- Barra de Progreso integrada -->
+                <Grid Width="600" Margin="0,0,0,20" x:Name="ProgressContainer">
+                    <Border Height="4" 
+                            Background="#05E8B820" 
+                            CornerRadius="2"/>
+                    <Border x:Name="ProgressFill" 
+                            Height="4" 
+                            Width="0" 
+                            HorizontalAlignment="Left" 
+                            Background="#E8B820" 
+                            CornerRadius="2">
+                        <Border.Effect>
+                            <DropShadowEffect Color="#E8B820" BlurRadius="12" ShadowDepth="0" Opacity="0.9"/>
+                        </Border.Effect>
+                    </Border>
+                    
+                    <TextBlock x:Name="StatusText" 
+                               Text="" 
+                               FontFamily="Consolas" 
+                               FontSize="9" 
+                               Foreground="#60E8B820" 
+                               HorizontalAlignment="Center" 
+                               VerticalAlignment="Top" 
+                               Margin="0,-14,0,0"/>
+                </Grid>
+
+                <!-- MEGA BOTÓN JUGAR (CENTRO) -->
+                <Button x:Name="PlayButtonLogued" 
+                        Style="{StaticResource PlayBtn}" 
+                        Width="260" 
+                        Height="56"
+                        Click="PlayButton_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{x:Static local:AppTexts.PlayButtonIcon}" 
+                                   FontFamily="Segoe UI Symbol" 
+                                   FontSize="13" 
+                                   Foreground="#F5E8C0" 
+                                   VerticalAlignment="Center"/>
+                        <TextBlock Text="{x:Static local:AppTexts.PlayButtonLabel}" 
+                                   FontFamily="Impact" 
+                                   FontSize="22" 
+                                   Foreground="#F5E8C0" 
+                                   VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+
+                <!-- Log text minimalista abajo -->
+                <TextBlock x:Name="LogText" 
+                           Text="" 
+                           FontFamily="Consolas" 
+                           FontSize="8" 
+                           Foreground="#20E8B820" 
+                           HorizontalAlignment="Center" 
+                           Margin="0,15,0,0" 
+                           MaxWidth="500" 
+                           TextTrimming="CharacterEllipsis"
+                           Opacity="0.5"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</UserControl>

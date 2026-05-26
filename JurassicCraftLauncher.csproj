@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>JurassicCraftLauncher</AssemblyName>
+    <RootNamespace>JurassicCraftLauncher</RootNamespace>
+    <Version>0.5.3</Version>
+    <InformationalVersion>Beta 0.5.3</InformationalVersion>
+    <ApplicationIcon>JurassicCraftLauncher.ico</ApplicationIcon>
+    <!-- Configuración para Exportación Portátil -->
+    <PublishSingleFile>true</PublishSingleFile>
+    <SelfContained>true</SelfContained>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <PublishReadyToRun>true</PublishReadyToRun>
+    <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+    <!-- Configuración para publicar por defecto en Release y en la carpeta publish_output -->
+    <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
+    <PublishDir>publish_output\</PublishDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CmlLib.Core" Version="4.0.6" />
+    <PackageReference Include="CmlLib.Core.Installer.Forge" Version="1.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="logo.png" />
+    <Resource Include="background.png" />
+    <Resource Include="JurassicCraftLauncher.ico" />
+  </ItemGroup>
+
+</Project>
