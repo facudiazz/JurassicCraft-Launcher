@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace JurassicCraftLauncher
@@ -16,6 +17,8 @@ namespace JurassicCraftLauncher
     /// </summary>
     public class ModpackService
     {
+        private static readonly TimeSpan LargeDownloadTimeout = TimeSpan.FromMinutes(45);
+
         #region Campos Privados y Rutas
 
         private readonly string _gameDir;
@@ -187,7 +190,7 @@ namespace JurassicCraftLauncher
             string normalizedPath = repoRelativePath.Replace("\\", "/");
             string url = $"https://raw.githubusercontent.com/{AppConstants.GitHubOwner}/{AppConstants.ModpackRepoName}/{AppConstants.GitHubBranch}/{normalizedPath}";
 
-            using var client = new HttpClient();
+            using var client = CreateLongDownloadHttpClient();
             client.DefaultRequestHeaders.Add("User-Agent", "JurassicCraftLauncher");
             using var response = await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
 
@@ -211,7 +214,7 @@ namespace JurassicCraftLauncher
             }
 
             string publicReleaseUrl = $"https://github.com/{AppConstants.GitHubOwner}/{AppConstants.ModpackRepoName}/releases/download/{AppConstants.ModpackReleaseTag}/{Uri.EscapeDataString(fileName)}";
-            using var publicClient = new HttpClient();
+            using var publicClient = CreateLongDownloadHttpClient();
             publicClient.DefaultRequestHeaders.Add("User-Agent", "JurassicCraftLauncher");
             using var publicResponse = await publicClient.GetAsync(publicReleaseUrl, HttpCompletionOption.ResponseHeadersRead);
 
@@ -226,7 +229,7 @@ namespace JurassicCraftLauncher
 
             // Fallback por API solo si la URL pública directa no respondió bien.
             var handler = new HttpClientHandler { AllowAutoRedirect = false };
-            using var client = new HttpClient(handler);
+            using var client = CreateLongDownloadHttpClient(handler);
             ApplyGitHubHeaders(client, "JurassicCraftLauncher");
 
             using var request = new HttpRequestMessage(HttpMethod.Get, url);
@@ -257,8 +260,15 @@ namespace JurassicCraftLauncher
 
         private HttpClient CreateGithubHttpClient(string userAgent)
         {
-            var client = new HttpClient();
+            var client = CreateLongDownloadHttpClient();
             ApplyGitHubHeaders(client, userAgent);
+            return client;
+        }
+
+        private HttpClient CreateLongDownloadHttpClient(HttpMessageHandler? handler = null)
+        {
+            var client = handler == null ? new HttpClient() : new HttpClient(handler);
+            client.Timeout = LargeDownloadTimeout;
             return client;
         }
 

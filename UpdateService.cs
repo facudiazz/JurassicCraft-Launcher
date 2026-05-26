@@ -14,6 +14,8 @@ namespace JurassicCraftLauncher
     /// </summary>
     public class UpdateService
     {
+        private static readonly TimeSpan DownloadTimeout = TimeSpan.FromMinutes(20);
+
         /// <summary>
         /// Evento emitido a los suscriptores UI informando el porcentaje [0-1] y el mensaje de estado de descarga.
         /// </summary>
@@ -182,6 +184,7 @@ del ""%~f0""
         private HttpClient CreateConfiguredHttpClient()
         {
             var client = new HttpClient();
+            client.Timeout = DownloadTimeout;
             if (!string.IsNullOrWhiteSpace(AppConstants.GitHubToken))
             {
                 client.DefaultRequestHeaders.Add("Authorization", $"token {AppConstants.GitHubToken}");
