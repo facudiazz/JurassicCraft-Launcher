@@ -16,7 +16,7 @@ Ejemplo:
 ```json
 {
   "GitHubOwner": "facudiazz",
-  "ModpackRepoName": "JurassicCraft-modpack",
+  "ModpackRepoName": "JurassicCraft-Modpack",
   "LauncherRepoName": "JurassicCraft-Launcher",
   "GitHubToken": "",
   "DefaultMinecraftVersion": "1.20.1",

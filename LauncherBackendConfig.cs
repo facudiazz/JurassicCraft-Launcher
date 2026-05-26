@@ -8,7 +8,7 @@ namespace JurassicCraftLauncher
     {
         public string GitHubOwner { get; set; } = "facudiazz";
 
-        public string ModpackRepoName { get; set; } = "JurassicCraft-modpack";
+        public string ModpackRepoName { get; set; } = "JurassicCraft-Modpack";
 
         public string LauncherRepoName { get; set; } = "JurassicCraft-Launcher";
 
