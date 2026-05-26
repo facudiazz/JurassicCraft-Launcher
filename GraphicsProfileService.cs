@@ -9,6 +9,23 @@ namespace JurassicCraftLauncher
 {
     public class GraphicsProfileService
     {
+        private static readonly string[] MediumSafeClientOnlyMods =
+        {
+            "physics-mod-pro-",
+            "oculus-",
+            "DistantHorizons-"
+        };
+
+        private static readonly string[] LowSafeClientOnlyMods =
+        {
+            "physics-mod-pro-",
+            "oculus-",
+            "DistantHorizons-",
+            "AmbientSounds_",
+            "sound-physics-remastered-",
+            "fallingleaves-"
+        };
+
         private readonly string _gameDir;
         private readonly string _modsDir;
         private readonly string _disabledModsDir;
@@ -96,9 +113,12 @@ namespace JurassicCraftLauncher
 
         private HashSet<string> GetDisabledPrefixesForPreset(string preset)
         {
-            // Por seguridad de compatibilidad con el server, los presets no desactivan mods
-            // hasta que tengamos una whitelist verificada de mods 100% cliente.
-            return new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            return preset switch
+            {
+                "Low" => new HashSet<string>(LowSafeClientOnlyMods, StringComparer.OrdinalIgnoreCase),
+                "Medium" => new HashSet<string>(MediumSafeClientOnlyMods, StringComparer.OrdinalIgnoreCase),
+                _ => new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+            };
         }
 
         private void ApplyOptionsProfile(string preset)
