@@ -125,6 +125,11 @@ namespace JurassicCraftLauncher
 
         private bool DetermineIfDownloadNeeded(ManifestFile manifestNode, string localPath, Dictionary<string, string> localSyncState)
         {
+            if (!File.Exists(localPath) && TryGetDisabledOptionalModPath(manifestNode.Path, out string? disabledPath) && File.Exists(disabledPath))
+            {
+                return CalculateSha256(disabledPath) != manifestNode.Hash;
+            }
+
             if (!File.Exists(localPath)) 
                 return true;
 
@@ -142,6 +147,32 @@ namespace JurassicCraftLauncher
             }
 
             return false;
+        }
+
+        private bool TryGetDisabledOptionalModPath(string? manifestRelativePath, out string? disabledPath)
+        {
+            disabledPath = null;
+
+            if (string.IsNullOrWhiteSpace(manifestRelativePath))
+            {
+                return false;
+            }
+
+            string normalized = manifestRelativePath.Replace('/', Path.DirectorySeparatorChar);
+            string modsPrefix = "mods" + Path.DirectorySeparatorChar;
+            if (!normalized.StartsWith(modsPrefix, StringComparison.OrdinalIgnoreCase))
+            {
+                return false;
+            }
+
+            string fileName = Path.GetFileName(normalized);
+            if (string.IsNullOrWhiteSpace(fileName))
+            {
+                return false;
+            }
+
+            disabledPath = Path.Combine(AppConstants.DisabledOptionalModsDir, fileName);
+            return true;
         }
 
         #endregion
