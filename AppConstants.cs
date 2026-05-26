@@ -59,6 +59,11 @@ namespace JurassicCraftLauncher
         /// </summary>
         public static string LauncherRepoName => LauncherBackend.Current.LauncherRepoName;
 
+        /// <summary>
+        /// Branch por defecto desde donde se leen los archivos raw del modpack.
+        /// </summary>
+        public static string GitHubBranch => LauncherBackend.Current.GitHubBranch;
+
         #endregion
 
         #region Versiones por Defecto

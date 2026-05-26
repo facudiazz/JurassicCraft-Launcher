@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 namespace JurassicCraftLauncher
 {
     /// <summary>
-    /// Servicio de sincronización principal. Responsable de conectarse al repositorio
+    /// Servicio de sincronizaciÃ³n principal. Responsable de conectarse al repositorio
     /// en GitHub definido en AppConstants, analizar el manifiesto y asegurar que los 
-    /// archivos locales del modpack estén íntegros e idempotentes.
+    /// archivos locales del modpack estÃ©n Ã­ntegros e idempotentes.
     /// </summary>
     public class ModpackService
     {
@@ -24,7 +24,7 @@ namespace JurassicCraftLauncher
         private readonly string _syncStatePath;
 
         /// <summary>
-        /// Evento emitido a componentes UI suscribiéndose al progreso.
+        /// Evento emitido a componentes UI suscribiÃ©ndose al progreso.
         /// Devuelve (archivoActual, totalArchivos, nombreDeArchivoDescargando).
         /// </summary>
         public event Action<int, int, string>? ProgressChanged;
@@ -39,10 +39,10 @@ namespace JurassicCraftLauncher
 
         #endregion
 
-        #region Proceso Central de Sincronización
+        #region Proceso Central de SincronizaciÃ³n
 
         /// <summary>
-        /// Descarga únicamente los metadatos obligatorios (manifest e info) ignorando los binarios pesados.
+        /// Descarga Ãºnicamente los metadatos obligatorios (manifest e info) ignorando los binarios pesados.
         /// Este es usualmente el "Paso 1" del lanzamiento, vital para comprobar versiones de Forge/Minecraft.
         /// </summary>
         public async Task DownloadMetadata()
@@ -59,7 +59,7 @@ namespace JurassicCraftLauncher
         public async Task SyncModpack()
         {
             if (!File.Exists(_manifestPath))
-                throw new FileNotFoundException("No se encontró el archivo manifest.json localmente impidiendo la sincronización.");
+                throw new FileNotFoundException("No se encontrÃ³ el archivo manifest.json localmente impidiendo la sincronizaciÃ³n.");
 
             var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
             var manifest = JsonSerializer.Deserialize<Manifest>(File.ReadAllText(_manifestPath), options);
@@ -72,19 +72,19 @@ namespace JurassicCraftLauncher
 
         #endregion
 
-        #region Lógica Predictiva (Smart Sync)
+        #region LÃ³gica Predictiva (Smart Sync)
 
         /// <summary>
-        /// Compara el estado local actual (existencia, Hashes y política de actualización) 
-        /// y define la ruta óptima de descargas necesarias.
+        /// Compara el estado local actual (existencia, Hashes y polÃ­tica de actualizaciÃ³n) 
+        /// y define la ruta Ã³ptima de descargas necesarias.
         /// </summary>
         private async Task SyncManifestFiles(List<ManifestFile> manifestFiles)
         {
-            // 1. Cargar el último estado validado de sincronización
+            // 1. Cargar el Ãºltimo estado validado de sincronizaciÃ³n
             var localSyncState = ReadSyncState();
             var pendingDownloadQueue = new List<ManifestFile>();
 
-            // 2. Crear cola de descargas determinando cuáles archivos tienen prioridad
+            // 2. Crear cola de descargas determinando cuÃ¡les archivos tienen prioridad
             foreach (var file in manifestFiles)
             {
                 if (string.IsNullOrEmpty(file.Path)) continue;
@@ -133,7 +133,7 @@ namespace JurassicCraftLauncher
             if (!File.Exists(localPath)) 
                 return true;
 
-            // 'forced' implica que pase lo que pase si se modifica un archivo que no deba, el launcher lo revertirá 
+            // 'forced' implica que pase lo que pase si se modifica un archivo que no deba, el launcher lo revertirÃ¡ 
             if (manifestNode.Type == "forced")
             {
                 return CalculateSha256(localPath) != manifestNode.Hash;
@@ -184,16 +184,15 @@ namespace JurassicCraftLauncher
         /// </summary>
         private async Task DownloadFileTreeFromApi(string repoRelativePath, string diskDestinationPath)
         {
-            string url = $"https://api.github.com/repos/{AppConstants.GitHubOwner}/{AppConstants.ModpackRepoName}/contents/{repoRelativePath}";
+            string normalizedPath = repoRelativePath.Replace("\\", "/");
+            string url = $"https://raw.githubusercontent.com/{AppConstants.GitHubOwner}/{AppConstants.ModpackRepoName}/{AppConstants.GitHubBranch}/{normalizedPath}";
 
-            using var client = CreateGithubHttpClient();
-            using var request = new HttpRequestMessage(HttpMethod.Get, url);
-            request.Headers.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/vnd.github.v3.raw"));
-
-            using var response = await client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
+            using var client = new HttpClient();
+            client.DefaultRequestHeaders.Add("User-Agent", "JurassicCraftLauncher");
+            using var response = await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
 
             if (!response.IsSuccessStatusCode)
-                throw new HttpRequestException($"Fallo localizando archivo '{repoRelativePath}'. API Github retornó: {response.StatusCode}");
+                throw new HttpRequestException($"Fallo localizando archivo '{repoRelativePath}'. Raw GitHub retorno: {response.StatusCode}");
 
             await using var fs = new FileStream(diskDestinationPath, FileMode.Create, FileAccess.Write, FileShare.None);
             await response.Content.CopyToAsync(fs);
@@ -201,13 +200,13 @@ namespace JurassicCraftLauncher
 
         /// <summary>
         /// Al enfrentarse a binarios grandes que GitHub rechaza por API standard,
-        /// navega los Assets adjuntados a una release pública.
+        /// navega los Assets adjuntados a una release pÃºblica.
         /// </summary>
         private async Task DownloadAssetFromRelease(long assetId, string diskDestinationPath)
         {
             string url = $"https://api.github.com/repos/{AppConstants.GitHubOwner}/{AppConstants.ModpackRepoName}/releases/assets/{assetId}";
 
-            // Deshabilitamos la redirección automática dado que el CDN responde con AWS S3 url
+            // Deshabilitamos la redirecciÃ³n automÃ¡tica dado que el CDN responde con AWS S3 url
             // y a veces las credenciales adjuntas de github ensucian el auth de Amazon.
             var handler = new HttpClientHandler { AllowAutoRedirect = false };
             using var client = new HttpClient(handler);
@@ -221,7 +220,7 @@ namespace JurassicCraftLauncher
 
             HttpResponseMessage finalResponse = response;
 
-            // GitHub Content Server emite Http 302 y adjunta una redirección hacia un nodo CDN.
+            // GitHub Content Server emite Http 302 y adjunta una redirecciÃ³n hacia un nodo CDN.
             if ((int)response.StatusCode >= 300 && (int)response.StatusCode < 400 && response.Headers.Location != null)
             {
                 var cdnUrl = response.Headers.Location.ToString();
@@ -233,7 +232,7 @@ namespace JurassicCraftLauncher
             }
 
             if (!finalResponse.IsSuccessStatusCode)
-                throw new HttpRequestException($"La descarga del Asset N° {assetId} ha fracasado en la CDN. Código: {finalResponse.StatusCode}");
+                throw new HttpRequestException($"La descarga del Asset NÂ° {assetId} ha fracasado en la CDN. CÃ³digo: {finalResponse.StatusCode}");
 
             await using var fs = new FileStream(diskDestinationPath, FileMode.Create, FileAccess.Write, FileShare.None);
             await finalResponse.Content.CopyToAsync(fs);

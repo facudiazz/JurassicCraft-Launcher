@@ -18,6 +18,7 @@ Ejemplo:
   "GitHubOwner": "facudiazz",
   "ModpackRepoName": "JurassicCraft-Modpack",
   "LauncherRepoName": "JurassicCraft-Launcher",
+  "GitHubBranch": "main",
   "GitHubToken": "",
   "DefaultMinecraftVersion": "1.20.1",
   "DefaultForgeVersion": "47.4.10"
