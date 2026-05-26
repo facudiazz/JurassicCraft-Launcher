@@ -14,6 +14,8 @@ namespace JurassicCraftLauncher
 
         public string GitHubBranch { get; set; } = "main";
 
+        public string ModpackReleaseTag { get; set; } = "v1.0.0";
+
         public string GitHubToken { get; set; } = string.Empty;
 
         public string DefaultMinecraftVersion { get; set; } = "1.20.1";
@@ -56,6 +58,7 @@ namespace JurassicCraftLauncher
             config.ModpackRepoName = ReadEnvOrDefault("JC_MODPACK_REPO", config.ModpackRepoName);
             config.LauncherRepoName = ReadEnvOrDefault("JC_LAUNCHER_REPO", config.LauncherRepoName);
             config.GitHubBranch = ReadEnvOrDefault("JC_GITHUB_BRANCH", config.GitHubBranch);
+            config.ModpackReleaseTag = ReadEnvOrDefault("JC_MODPACK_RELEASE_TAG", config.ModpackReleaseTag);
             config.GitHubToken = ReadEnvOrDefault("JC_GITHUB_TOKEN", config.GitHubToken);
             config.DefaultMinecraftVersion = ReadEnvOrDefault("JC_MINECRAFT_VERSION", config.DefaultMinecraftVersion);
             config.DefaultForgeVersion = ReadEnvOrDefault("JC_FORGE_VERSION", config.DefaultForgeVersion);

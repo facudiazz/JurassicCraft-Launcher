@@ -19,6 +19,7 @@ Ejemplo:
   "ModpackRepoName": "JurassicCraft-Modpack",
   "LauncherRepoName": "JurassicCraft-Launcher",
   "GitHubBranch": "main",
+  "ModpackReleaseTag": "v1.0.0",
   "GitHubToken": "",
   "DefaultMinecraftVersion": "1.20.1",
   "DefaultForgeVersion": "47.4.10"

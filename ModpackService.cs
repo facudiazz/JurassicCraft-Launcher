@@ -204,35 +204,47 @@ namespace JurassicCraftLauncher
         /// </summary>
         private async Task DownloadAssetFromRelease(long assetId, string diskDestinationPath)
         {
+            string fileName = Path.GetFileName(diskDestinationPath);
+            if (string.IsNullOrWhiteSpace(fileName))
+            {
+                throw new InvalidOperationException($"No se pudo resolver el nombre de archivo para el asset {assetId}.");
+            }
+
+            string publicReleaseUrl = $"https://github.com/{AppConstants.GitHubOwner}/{AppConstants.ModpackRepoName}/releases/download/{AppConstants.ModpackReleaseTag}/{Uri.EscapeDataString(fileName)}";
+            using var publicClient = new HttpClient();
+            publicClient.DefaultRequestHeaders.Add("User-Agent", "JurassicCraftLauncher");
+            using var publicResponse = await publicClient.GetAsync(publicReleaseUrl, HttpCompletionOption.ResponseHeadersRead);
+
+            if (publicResponse.IsSuccessStatusCode)
+            {
+                await using var publicFs = new FileStream(diskDestinationPath, FileMode.Create, FileAccess.Write, FileShare.None);
+                await publicResponse.Content.CopyToAsync(publicFs);
+                return;
+            }
+
             string url = $"https://api.github.com/repos/{AppConstants.GitHubOwner}/{AppConstants.ModpackRepoName}/releases/assets/{assetId}";
 
-            // Deshabilitamos la redirecciÃ³n automÃ¡tica dado que el CDN responde con AWS S3 url
-            // y a veces las credenciales adjuntas de github ensucian el auth de Amazon.
+            // Fallback por API solo si la URL pública directa no respondió bien.
             var handler = new HttpClientHandler { AllowAutoRedirect = false };
             using var client = new HttpClient(handler);
-            
             ApplyGitHubHeaders(client, "JurassicCraftLauncher");
 
             using var request = new HttpRequestMessage(HttpMethod.Get, url);
             request.Headers.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/octet-stream"));
 
             using var response = await client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
-
             HttpResponseMessage finalResponse = response;
 
-            // GitHub Content Server emite Http 302 y adjunta una redirecciÃ³n hacia un nodo CDN.
             if ((int)response.StatusCode >= 300 && (int)response.StatusCode < 400 && response.Headers.Location != null)
             {
                 var cdnUrl = response.Headers.Location.ToString();
                 using var cdnRequest = new HttpRequestMessage(HttpMethod.Get, cdnUrl);
-                // NOTA: No enviamos header Authentication a la red S3.
                 cdnRequest.Headers.Add("User-Agent", "JurassicCraftLauncher");
-                
                 finalResponse = await client.SendAsync(cdnRequest, HttpCompletionOption.ResponseHeadersRead);
             }
 
             if (!finalResponse.IsSuccessStatusCode)
-                throw new HttpRequestException($"La descarga del Asset NÂ° {assetId} ha fracasado en la CDN. CÃ³digo: {finalResponse.StatusCode}");
+                throw new HttpRequestException($"La descarga del Asset N° {assetId} falló. URL pública: {publicResponse.StatusCode}. Fallback API/CDN: {finalResponse.StatusCode}");
 
             await using var fs = new FileStream(diskDestinationPath, FileMode.Create, FileAccess.Write, FileShare.None);
             await finalResponse.Content.CopyToAsync(fs);

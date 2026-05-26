@@ -64,6 +64,11 @@ namespace JurassicCraftLauncher
         /// </summary>
         public static string GitHubBranch => LauncherBackend.Current.GitHubBranch;
 
+        /// <summary>
+        /// Tag de release desde donde se descargan los assets pesados del modpack.
+        /// </summary>
+        public static string ModpackReleaseTag => LauncherBackend.Current.ModpackReleaseTag;
+
         #endregion
 
         #region Versiones por Defecto
