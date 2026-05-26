@@ -33,6 +33,11 @@ namespace JurassicCraftLauncher
         /// </summary>
         public static readonly string GameDir = Path.Combine(AppDataDir, "game");
 
+        /// <summary>
+        /// Directorio auxiliar para guardar mods opcionales desactivados por preset gráfico.
+        /// </summary>
+        public static readonly string DisabledOptionalModsDir = Path.Combine(GameDir, "disabled_optional_mods");
+
         #endregion
 
         #region Configuración de GitHub

@@ -188,7 +188,12 @@ namespace JurassicCraftLauncher
 
                 string extraJvmArgs = _configManager.Config.UseCustomJvmArgs ? _configManager.Config.CustomJvmArgs : "";
 
-                await _minecraftService.LaunchAsync(uniqueVersionId, _configManager.Config.Username, _configManager.Config.MaxRamMb, extraJvmArgs);
+                await _minecraftService.LaunchAsync(
+                    uniqueVersionId,
+                    _configManager.Config.Username,
+                    _configManager.Config.MaxRamMb,
+                    _configManager.Config.GraphicsPreset,
+                    extraJvmArgs);
 
                 await Task.Delay(1500);
                 Application.Current.Shutdown();

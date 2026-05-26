@@ -25,6 +25,7 @@ namespace JurassicCraftLauncher
 
         private readonly MinecraftLauncher _launcherCore;
         private readonly string _gameDir;
+        private readonly GraphicsProfileService _graphicsProfileService;
 
         /// <summary>
         /// Evento notificador de estado textual. Generalmente enlazado a la label de Log.
@@ -41,6 +42,7 @@ namespace JurassicCraftLauncher
             _gameDir = gameDir;
             var mcPath = new MinecraftPath(gameDir);
             _launcherCore = new MinecraftLauncher(mcPath);
+            _graphicsProfileService = new GraphicsProfileService(gameDir);
         }
 
         #endregion
@@ -222,9 +224,10 @@ namespace JurassicCraftLauncher
         /// <summary>
         /// Fabrica los argumentos del entorno, token offline y ejecuta la sesión de juego.
         /// </summary>
-        public async Task LaunchAsync(string versionId, string offlineUsername, int maxRamAlloc, string customJvmArgs = "")
+        public async Task LaunchAsync(string versionId, string offlineUsername, int maxRamAlloc, string graphicsPreset, string customJvmArgs = "")
         {
             FireLogUpdate(AppTexts.LogLaunchAdjustingProfile);
+            FireLogUpdate(_graphicsProfileService.ApplyPreset(graphicsPreset));
 
             string javaPath = TryLocateJava17();
             var authSession = MSession.CreateOfflineSession(offlineUsername);
