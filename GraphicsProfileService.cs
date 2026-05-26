@@ -14,22 +14,6 @@ namespace JurassicCraftLauncher
         private readonly string _disabledModsDir;
         private readonly string _optionsPath;
 
-        private static readonly string[] HighImpactOptionalMods =
-        {
-            "physics-mod-pro-",
-            "oculus-",
-            "DistantHorizons-",
-            "AmbientSounds_",
-            "sound-physics-remastered-"
-        };
-
-        private static readonly string[] CosmeticOptionalMods =
-        {
-            "fallingleaves-",
-            "particular-",
-            "immersive-winds-"
-        };
-
         public GraphicsProfileService(string gameDir)
         {
             _gameDir = gameDir;
@@ -112,12 +96,9 @@ namespace JurassicCraftLauncher
 
         private HashSet<string> GetDisabledPrefixesForPreset(string preset)
         {
-            return preset switch
-            {
-                "Low" => new HashSet<string>(HighImpactOptionalMods.Concat(CosmeticOptionalMods), StringComparer.OrdinalIgnoreCase),
-                "Medium" => new HashSet<string>(HighImpactOptionalMods, StringComparer.OrdinalIgnoreCase),
-                _ => new HashSet<string>(StringComparer.OrdinalIgnoreCase)
-            };
+            // Por seguridad de compatibilidad con el server, los presets no desactivan mods
+            // hasta que tengamos una whitelist verificada de mods 100% cliente.
+            return new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         }
 
         private void ApplyOptionsProfile(string preset)
